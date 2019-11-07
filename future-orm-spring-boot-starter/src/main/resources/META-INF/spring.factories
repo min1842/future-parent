@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.future.basic.orm.FutureAutoConfiguration,\
+com.future.basic.orm.PageHelperConfiguration
