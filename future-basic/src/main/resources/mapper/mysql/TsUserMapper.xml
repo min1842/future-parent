@@ -2,4 +2,33 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper
 	namespace="com.future.basic.framework.mapper.mysql.TsUserMapper">
+
+	<!-- Query userInfo by userAccount or userEmail -->
+	<select id="queryUserInfoByAccountOrEmail"
+		resultType="com.future.basic.framework.model.TsUserinfoModel">
+		SELECT
+			id
+			user_account
+			user_password
+			user_name
+			user_email
+			user_phone
+			user_description
+			user_status
+			create_by
+			create_tm
+			update_by
+			update_tm
+		FROM TS_USER
+		<where>
+			<if test="userAccount != null">
+				user_account = #{userAccount}
+			</if>
+			<if test="userEmail != null">
+				and user_email = #{userEmail}
+			</if>
+		</where>
+	</select>
+	
+	<select id=""></select>
 </mapper>
