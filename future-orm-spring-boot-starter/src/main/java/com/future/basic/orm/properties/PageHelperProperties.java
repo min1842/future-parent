@@ -4,7 +4,7 @@ import java.util.Properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties(prefix = PageHelperProperties.PREFIX, ignoreUnknownFields = true)
+@ConfigurationProperties
 public class PageHelperProperties {
 
 	public static final String PREFIX = "pageHelper";
