@@ -46,6 +46,7 @@ public class PrimaryDataSource {
 	@Primary
 	public SqlSessionFactoryBean primarySqlsessionFactory(@Qualifier("primaryDruidDataSource") DataSource dataSource,
 			@Qualifier("primaryFutureOrmProperties") FutureOrmProperties futureOrmProperties) {
+		futureOrmProperties.addMapperLocations("classpath*:mapper/**/mysql/*Mapper.xml");
 		SqlSessionFactoryBean sqlSessionFactory = new SqlSessionFactoryBean();
 		sqlSessionFactory.setConfiguration(futureOrmProperties.getConfig());
 		sqlSessionFactory.setMapperLocations(futureOrmProperties.resolveMapperResource());

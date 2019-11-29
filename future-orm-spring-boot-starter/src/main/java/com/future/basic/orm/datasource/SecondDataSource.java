@@ -42,6 +42,7 @@ public class SecondDataSource {
 	@Bean
 	public SqlSessionFactoryBean secondSqlSessionFactory(@Qualifier("secondDruidDataSource") DataSource datasource,
 			@Qualifier("secondFutureOrmProperties") FutureOrmProperties futureOrmProperties) {
+		futureOrmProperties.addMapperLocations("classpath*:mapper/**/oracle/*Mapper.xml");
 		SqlSessionFactoryBean sqlsessionFactory = new SqlSessionFactoryBean();
 		sqlsessionFactory.setConfiguration(futureOrmProperties.getConfig());
 		sqlsessionFactory.setMapperLocations(futureOrmProperties.resolveMapperResource());

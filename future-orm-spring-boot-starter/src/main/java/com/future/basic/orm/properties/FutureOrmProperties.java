@@ -1,12 +1,15 @@
 package com.future.basic.orm.properties;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.apache.ibatis.session.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -41,5 +44,11 @@ public class FutureOrmProperties {
 			log.error("Load Mapper Resource Error.", e);
 		}
 		return Stream.empty();
+	}
+
+	public void addMapperLocations(@NonNull String... mapperLocations) {
+		this.mapperLocations = Stream
+				.of(Optional.ofNullable(this.mapperLocations).orElse(new String[0]), mapperLocations)
+				.flatMap(Stream::of).toArray(String[]::new);
 	}
 }
