@@ -44,6 +44,7 @@ public class SecondDataSource {
 			@Qualifier("secondFutureOrmProperties") FutureOrmProperties futureOrmProperties) {
 		futureOrmProperties.addMapperLocations("classpath*:mapper/**/oracle/*Mapper.xml");
 		SqlSessionFactoryBean sqlsessionFactory = new SqlSessionFactoryBean();
+		sqlsessionFactory.setDataSource(datasource);
 		sqlsessionFactory.setConfiguration(futureOrmProperties.getConfig());
 		sqlsessionFactory.setMapperLocations(futureOrmProperties.resolveMapperResource());
 		sqlsessionFactory.setFailFast(true);
@@ -51,7 +52,7 @@ public class SecondDataSource {
 	}
 
 	@Bean
-	public DataSourceTransactionManager dataSourceTransactionManager(
+	public DataSourceTransactionManager secondDataSourceTransactionManager(
 			@Qualifier("secondDruidDataSource") DataSource dataSource) {
 		return ((Function<DataSource, DataSourceTransactionManager>) DataSourceTransactionManager::new)
 				.apply(dataSource);

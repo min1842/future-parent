@@ -7,17 +7,17 @@
 	<select id="queryUserInfoByAccountOrEmail"
 		resultType="com.future.basic.framework.model.TsUserInfoModel">
 		SELECT
-			id
-			user_account
-			user_password
-			user_name
-			user_email
-			user_phone
-			user_description
-			user_status
-			create_by
-			create_tm
-			update_by
+			id,
+			user_account,
+			user_password,
+			user_name,
+			user_email,
+			user_phone,
+			user_description,
+			user_status,
+			create_by,
+			create_tm,
+			update_by,
 			update_tm
 		FROM TS_USER
 		<where>
