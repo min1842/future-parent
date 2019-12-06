@@ -11,6 +11,9 @@ public class FutureCommonModel implements Serializable {
 
 	private static final long serialVersionUID = -1313766196466615754L;
 
+	private int pageNum;
+	private int pageSize = 10;
+	private int totalCount;
 	private String reateBy;
 	private String reateTm;
 	private String pdateBy;

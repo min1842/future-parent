@@ -20,3 +20,4 @@ target/
 *.iml
 *.idea/
 .sts4-cache
+.flattened-pom.xml

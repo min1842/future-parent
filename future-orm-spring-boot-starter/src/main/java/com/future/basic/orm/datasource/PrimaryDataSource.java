@@ -4,6 +4,7 @@ import java.util.function.Supplier;
 
 import javax.sql.DataSource;
 
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -45,8 +46,11 @@ public class PrimaryDataSource {
 	@Bean
 	@Primary
 	public SqlSessionFactoryBean primarySqlsessionFactory(@Qualifier("primaryDruidDataSource") DataSource dataSource,
-			@Qualifier("primaryFutureOrmProperties") FutureOrmProperties futureOrmProperties) {
+			@Qualifier("primaryFutureOrmProperties") FutureOrmProperties futureOrmProperties,
+			@Qualifier("futureSqlSessionFactoryBuilder") SqlSessionFactoryBuilder futureSqlSessionFactoryBuilder) {
+		futureOrmProperties.addMapperLocations("classpath*:mapper/**/mysql/*Mapper.xml");
 		SqlSessionFactoryBean sqlSessionFactory = new SqlSessionFactoryBean();
+		sqlSessionFactory.setSqlSessionFactoryBuilder(futureSqlSessionFactoryBuilder);
 		sqlSessionFactory.setConfiguration(futureOrmProperties.getConfig());
 		sqlSessionFactory.setMapperLocations(futureOrmProperties.resolveMapperResource());
 		sqlSessionFactory.setDataSource(dataSource);
