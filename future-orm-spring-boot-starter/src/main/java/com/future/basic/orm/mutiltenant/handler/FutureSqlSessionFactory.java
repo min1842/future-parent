@@ -1,9 +1,7 @@
-package com.future.basic.orm.datasource;
+package com.future.basic.orm.mutiltenant.handler;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-
-import javax.sql.DataSource;
 
 import org.apache.ibatis.exceptions.ExceptionFactory;
 import org.apache.ibatis.executor.ErrorContext;
@@ -18,19 +16,17 @@ import org.apache.ibatis.session.defaults.DefaultSqlSession;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
-import org.springframework.beans.factory.BeanFactory;
-
-import com.alibaba.druid.pool.DruidDataSource;
 
 public class FutureSqlSessionFactory implements SqlSessionFactory {
 
 	private final Configuration configuration;
 
-	private final BeanFactory beanFactory;
+	private final FutureMultiTenantDataSourceHandler futureMultiTenantDataSourceHandler;
 
-	public FutureSqlSessionFactory(Configuration configuration, BeanFactory beanFactory) {
+	public <T extends FutureMultiTenantDataSourceHandler> FutureSqlSessionFactory(Configuration configuration,
+			T futureMultiTenantDataSourceHandler) {
 		this.configuration = configuration;
-		this.beanFactory = beanFactory;
+		this.futureMultiTenantDataSourceHandler = futureMultiTenantDataSourceHandler;
 	}
 
 	@Override
@@ -84,7 +80,8 @@ public class FutureSqlSessionFactory implements SqlSessionFactory {
 		try {
 			final Environment environment = configuration.getEnvironment();
 			final TransactionFactory transactionFactory = getTransactionFactoryFromEnvironment(environment);
-			tx = transactionFactory.newTransaction(getMultiTenantDataSource(environment), level, autoCommit);
+			tx = transactionFactory.newTransaction(
+					futureMultiTenantDataSourceHandler.getMultiTenantDataSource(environment), level, autoCommit);
 			final Executor executor = configuration.newExecutor(tx, execType);
 			return new DefaultSqlSession(configuration, executor, autoCommit);
 		} catch (Exception e) {
@@ -133,18 +130,4 @@ public class FutureSqlSessionFactory implements SqlSessionFactory {
 			}
 		}
 	}
-
-	protected DataSource getMultiTenantDataSource(Environment environment) {
-		DruidDataSource datasource;
-		String uuid = (String) FutureThreadLocal.multi_tenant.get();
-		if ("UUID=2".equals(uuid)) {
-			datasource = (DruidDataSource) beanFactory.getBean("secondDruidDataSource");
-		} else {
-			datasource = (DruidDataSource) environment.getDataSource();
-		}
-		System.out.println("========================UUID========================" + uuid + "," + datasource.getID()
-				+ ":" + datasource.getName());
-		return datasource;
-	}
-
 }
