@@ -1,5 +1,7 @@
 package com.future.basic.orm.mutiltenant;
 
+import java.util.function.Supplier;
+
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -21,11 +23,16 @@ public class FutureSqlSessionFactoryBuilder extends SqlSessionFactoryBuilder {
 
 	@Override
 	public SqlSessionFactory build(Configuration config) {
-		return new FutureSqlSessionFactory(config, handler);
+		return new FutureSqlSessionFactory(config, this.handler);
 	}
 
 	public <T extends FutureMultiTenantDataSourceHandler> void setMultiTenantDataSourceHandler(T customHandler) {
 		Assert.notNull(customHandler, "CustomHandler must not be null");
 		this.handler = customHandler;
+	}
+
+	public <T extends FutureMultiTenantDataSourceHandler> void setMultiTenantDataSourceHandler(
+			Supplier<T> customHandlerSuplier) {
+		this.handler = customHandlerSuplier.get();
 	}
 }

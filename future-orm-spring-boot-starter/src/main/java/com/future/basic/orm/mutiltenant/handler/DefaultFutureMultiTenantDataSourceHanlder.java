@@ -9,6 +9,7 @@ import org.apache.ibatis.mapping.Environment;
 import org.springframework.util.Assert;
 
 import com.future.basic.orm.mutiltenant.FutureThreadLocal;
+import com.future.basic.orm.mutiltenant.cache.FutureMapCache;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,19 +18,29 @@ public class DefaultFutureMultiTenantDataSourceHanlder implements FutureMultiTen
 
 	@Override
 	public DataSource getMultiTenantDataSource(Environment environment) {
-		DataSource dataSource = Optional.ofNullable(lookupTenantdaDataSource()).orElse(environment.getDataSource());
+		Serializable mark = FutureThreadLocal.getThreadLocalMark();
+		DataSource dataSource = Optional.ofNullable(lookupTenantdaDataSource(mark)).orElse(environment.getDataSource());
 		Assert.notNull(dataSource, "dataSource must not be null");
+		if (log.isInfoEnabled()) {
+			log.info("Switch Multi Tenant : [{1}],[{2}]", mark, dataSource.getClass());
+		}
 		return dataSource;
 	}
 
-	protected DataSource lookupTenantdaDataSource() {
-		Serializable mark = FutureThreadLocal.getThreadLocalMark();
-		if (log.isInfoEnabled()) {
-			log.info("Switch Multi Tenant : {1}", mark);
-		}
-		DataSource dataSource = MULTI_TENANT_DATASOURCE_MAP.get(mark);
+	/**
+	 * Look Up DataSource
+	 * 
+	 * @param mark
+	 * @return
+	 */
+	protected DataSource lookupTenantdaDataSource(Serializable mark) {
+		DataSource dataSource = FutureMapCache.MULTI_TENANT_DATASOURCE_MAP.get(mark);
 		if (dataSource == null) {
-
+			Optional<DataSource> dataSourceOpt = Optional.ofNullable(createDataSource());
+			if (dataSourceOpt.isPresent()) {
+				dataSource = dataSourceOpt.get();
+				FutureMapCache.MULTI_TENANT_DATASOURCE_MAP.put(mark, dataSource);
+			}
 		}
 		return dataSource;
 	}
