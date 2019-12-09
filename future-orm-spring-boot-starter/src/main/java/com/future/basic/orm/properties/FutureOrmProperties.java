@@ -1,7 +1,6 @@
 package com.future.basic.orm.properties;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -9,7 +8,6 @@ import org.apache.ibatis.session.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 
 import lombok.Getter;
 import lombok.Setter;

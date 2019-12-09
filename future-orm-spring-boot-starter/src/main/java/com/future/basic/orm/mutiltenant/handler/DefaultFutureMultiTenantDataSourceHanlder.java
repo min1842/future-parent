@@ -1,6 +1,5 @@
 package com.future.basic.orm.mutiltenant.handler;
 
-import java.io.Serializable;
 import java.util.Optional;
 
 import javax.sql.DataSource;
@@ -18,7 +17,7 @@ public class DefaultFutureMultiTenantDataSourceHanlder implements FutureMultiTen
 
 	@Override
 	public DataSource getMultiTenantDataSource(Environment environment) {
-		Serializable mark = FutureThreadLocal.getThreadLocalMark();
+		String mark = FutureThreadLocal.getThreadLocalMark();
 		DataSource dataSource = Optional.ofNullable(lookupTenantdaDataSource(mark)).orElse(environment.getDataSource());
 		Assert.notNull(dataSource, "dataSource must not be null");
 		if (log.isInfoEnabled()) {
@@ -33,7 +32,7 @@ public class DefaultFutureMultiTenantDataSourceHanlder implements FutureMultiTen
 	 * @param mark
 	 * @return
 	 */
-	protected DataSource lookupTenantdaDataSource(Serializable mark) {
+	protected DataSource lookupTenantdaDataSource(String mark) {
 		DataSource dataSource = FutureMapCache.MULTI_TENANT_DATASOURCE_MAP.get(mark);
 		if (dataSource == null) {
 			Optional<DataSource> dataSourceOpt = Optional.ofNullable(createDataSource());
