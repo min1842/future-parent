@@ -15,7 +15,7 @@
 	<properties>
 		<spring.boot.version>2.1.6.RELEASE</spring.boot.version>
 		<mybatis.spring.version>2.0.3</mybatis.spring.version>
-		<mybatis.version>3.5.3</mybatis.version>
+		<mybatis.version>3.5.6</mybatis.version>
 		<druid.version>1.1.20</druid.version>
 		<pagehelper.version>5.1.10</pagehelper.version>
 		<rversion>0.0.1-SNAPSHOT</rversion>
